@@ -95,7 +95,9 @@ LEFT JOIN workbooks W ON V.workbook_id = W.id
 LEFT JOIN projects P ON W.project_id = P.id
 WHERE N.grantee_type = 'User' AND N.authorizable_type = 'Workbook' AND P.name is not NULL -- user workbooks permissions
 )
-select UGP."Friendly Name", UGP."Is _users.id/groups.id", UGP."Is User/Group", UGP."Site", UGP."Workbook", UGP."Project"
+
+select UGP.uid, UGP."Friendly Name", UGP."Is _users.id/groups.id", UGP."Is User/Group", UGP."Site", UGP."Workbook", UGP."Project", UGP."View",
+UGP."Base Authorization", ALP."Is SysAdmin", ALP."Is SiteAdmin"
 from (
 /* Admin Level Permissions (10 = Sys, 5 = Site) */
 SELECT system_users.name AS user_name, system_users.id AS system_user_id, users.id AS user_id, sites.id AS site_id,
@@ -112,4 +114,4 @@ join users on users.system_user_id = system_users.id
 join sites on users.site_id = sites.id
 )ALP
 JOIN UGP
-on UGP."Friendly Name"=ALP."user_name"
+on UGP.uid= ALP."user_name"
